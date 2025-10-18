@@ -68,7 +68,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     final currentUser = context.read<UserProvider>().currentUser;
 
     final newPost = Post(
-      username: currentUser, // dynamic
+      username: currentUser ?? '', // dynamic
       caption: _captionController.text.trim(),
       imagePath: _selectedImage?.path,
       timestamp: DateTime.now(),

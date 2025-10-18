@@ -28,10 +28,11 @@ class _LikeButtonState extends State<LikeButton>
     _controller = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
-      lowerBound: 0.7,
-      upperBound: 1.2,
     );
-    _scaleAnim = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+
+    _scaleAnim = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
   }
 
   @override
@@ -41,7 +42,8 @@ class _LikeButtonState extends State<LikeButton>
   }
 
   void _onTap() {
-    _controller.forward().then((_) => _controller.reverse());
+    if (_controller.isAnimating) return;
+    _controller.forward(from: 0.0).then((_) => _controller.reverse());
     widget.onTap();
   }
 
@@ -145,7 +147,7 @@ class PostItem extends StatelessWidget {
               children: [
                 LikeButton(
                   isLiked: post.likedBy.contains(currentUser),
-                  onTap: () => postProvider.toggleLike(index, currentUser),
+                  onTap: () => postProvider.toggleLike(index, currentUser ?? ''),
                 ),
                 Text('${post.likes}'),
                 const SizedBox(width: 20),
@@ -222,7 +224,7 @@ class PostItem extends StatelessWidget {
                                         if (commentController.text.trim().isEmpty) return;
                                         postProvider.addComment(
                                           index,
-                                          context.read<UserProvider>().currentUser,
+                                          context.read<UserProvider>().currentUser??'',
                                           commentController.text.trim(),
                                         );
                                         commentController.clear();

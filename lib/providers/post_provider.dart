@@ -17,7 +17,7 @@ class PostProvider extends ChangeNotifier {
   /// Initialize Hive box and migrate old posts
   Future<void> _init() async {
     _postBox = Hive.box<Post>('postsBox');
-
+    // clearPosts();
     posts = _postBox.values.map((post) {
       post.likedBy = post.likedBy ?? [];
       post.comments = post.comments ?? [];
